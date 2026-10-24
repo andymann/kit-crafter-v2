@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sample Scout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="toolbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" width="22" height="22">
+        <defs>
+          <linearGradient id="logoGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8b5cf6"/>
+            <stop offset="45%" stop-color="#e94fd6"/>
+            <stop offset="100%" stop-color="#fbbf24"/>
+          </linearGradient>
+        </defs>
+        <rect x="1" y="9" width="3" height="8" rx="1.5" fill="url(#logoGrad)"/>
+        <rect x="6" y="4" width="3" height="16" rx="1.5" fill="url(#logoGrad)"/>
+        <rect x="11" y="2" width="3" height="20" rx="1.5" fill="url(#logoGrad)"/>
+        <rect x="16" y="6" width="3" height="12" rx="1.5" fill="url(#logoGrad)"/>
+        <rect x="21" y="10" width="2.2" height="6" rx="1.1" fill="url(#logoGrad)"/>
+      </svg>
+      <span class="brand-name">Sample Scout</span>
+    </div>
+
+    <button class="pill" id="viewModeBtn">View: <b>Folder</b></button>
+    <button class="pill pill-active" id="autoToggle">Auto: <b>ON</b></button>
+
+    <input class="search" id="searchInput" placeholder="Type to filter. 'Enter' to search...">
+
+    <div class="active-set-badge" id="activeSetBadge">
+      Active Set: <span class="accent" id="activeSetName">Loops</span>
+      <span class="count-chip" id="activeSetCount">(0)</span>
+      <kbd class="mini">q</kbd>
+    </div>
+
+    <button class="icon-btn" id="openFolderBtn" title="Open folder">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v2H3V6zm0 4h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/></svg>
+    </button>
+    <button class="icon-btn" id="helpBtn" title="Help">?</button>
+    <button class="icon-btn" id="settingsBtn" title="Settings">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19.4 13a7.4 7.4 0 0 0 .06-1 7.4 7.4 0 0 0-.06-1l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.5 7.5 0 0 0-1.73-1l-.36-2.54a.5.5 0 0 0-.5-.43h-3.84a.5.5 0 0 0-.5.43l-.36 2.54c-.63.24-1.21.58-1.73 1l-2.39-.96a.5.5 0 0 0-.6.22L2.75 8.78a.5.5 0 0 0 .12.64L4.9 11a7.4 7.4 0 0 0 0 2l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.42.32.6.22l2.39-.96c.52.42 1.1.76 1.73 1l.36 2.54c.05.25.26.43.5.43h3.84c.24 0 .45-.18.5-.43l.36-2.54c.63-.24 1.21-.58 1.73-1l2.39.96c.24.1.46.02.6-.22l1.92-3.32a.5.5 0 0 0-.12-.64L19.4 13zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+    </button>
+  </header>
+
+  <div class="main">
+
+    <section class="pane browser-pane">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <svg viewBox="0 0 24 24" width="14" height="14" class="crumb-icon"><path fill="currentColor" d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v2H3V6zm0 4h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/></svg>
+        <span id="breadcrumbPath">Collections</span>
+        <span class="spacer"></span>
+        <span class="item-count" id="itemCount">0 items</span>
+      </div>
+      <div class="file-list" id="fileList" tabindex="0"></div>
+    </section>
+
+    <section class="pane right-col">
+
+      <div class="set-pane">
+        <div class="set-header">
+          <span class="dot"></span>
+          <span id="setHeaderName">Loops</span>
+          <span class="spacer"></span>
+          <button class="icon-btn small" id="clearSetBtn" title="Clear set">
+            <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M6 7h12l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 7zm3-4h6l1 2h4v2H4V5h4l1-2z"/></svg>
+            <span id="setClearCount">0</span>
+          </button>
+        </div>
+        <div class="set-list" id="setList"></div>
+      </div>
+
+      <div class="detail-pane" id="detailPane">
+        <div class="detail-empty" id="detailEmpty">Select a sample to see details.</div>
+        <div class="detail-content" id="detailContent" style="display:none">
+          <div class="detail-header">
+            <span class="detail-name" id="detailName">—</span>
+            <span class="spacer"></span>
+            <button class="icon-btn small" id="revealBtn" title="Reveal in Finder">
+              <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v2H3V6zm0 4h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/></svg>
+            </button>
+            <button class="icon-btn small" id="openExternalBtn" title="Open">
+              <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H5v12h12v-6h2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
+            </button>
+          </div>
+          <div class="detail-path" id="detailPath">—</div>
+
+          <canvas id="waveformCanvas" class="waveform" height="110"></canvas>
+
+          <div class="format-line" id="formatLine">—</div>
+          <div class="analysis-line" id="analysisLine">—</div>
+
+          <div class="section">
+            <div class="section-title">IN SETS</div>
+            <div class="pills" id="inSetsPills"></div>
+          </div>
+          <div class="section">
+            <div class="section-title">NOTES</div>
+            <textarea class="notes-box" id="notesBox" placeholder="&quot;Add a note...&quot;"></textarea>
+          </div>
+          <div class="section">
+            <div class="section-title">TAGS</div>
+            <div class="pills" id="tagPills"></div>
+          </div>
+        </div>
+
+        <div class="playbar">
+          <button class="play-btn" id="playBtn">
+            <svg viewBox="0 0 24 24" width="14" height="14" id="playIcon"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+          </button>
+          <span class="now-playing" id="nowPlaying">—</span>
+          <span class="mini-format" id="miniFormat"></span>
+          <div class="seek-track" id="seekTrack"><div class="seek-fill" id="seekFill"></div></div>
+          <span class="time" id="timeLabel">0:00</span>
+          <button class="icon-btn small" id="loopBtn" title="Loop">
+            <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M17 17H7v-3l-4 4 4 4v-3h12v-6h-2v4zM7 7h10v3l4-4-4-4v3H5v6h2V7z"/></svg>
+          </button>
+          <button class="icon-btn small active" id="waveViewBtn" title="Waveform view">
+            <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M3 11h2v2H3v-2zm4-4h2v10H7V7zm4-3h2v16h-2V4zm4 5h2v6h-2V9zm4-2h2v10h-2V7z"/></svg>
+          </button>
+          <button class="icon-btn small active" id="infoViewBtn" title="Info view">
+            <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M11 10h2v7h-2zm0-4h2v2h-2zM12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <section class="editor-panel" id="editorPanel" style="display:none">
+    <div class="editor-toolbar">
+      <div class="editor-transport">
+        <button class="play-btn" id="editorPlayBtn">
+          <svg viewBox="0 0 24 24" width="14" height="14" id="editorPlayIcon"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="icon-btn small" id="editorLoopBtn" title="Loop clip">
+          <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M17 17H7v-3l-4 4 4 4v-3h12v-6h-2v4zM7 7h10v3l4-4-4-4v3H5v6h2V7z"/></svg>
+        </button>
+        <span class="editor-name" id="editorFileName">—</span>
+        <span class="editor-time" id="editorTime">0:00.000 / 0:00.000</span>
+      </div>
+      <span class="spacer"></span>
+      <div class="editor-clip-tools">
+        <span class="editor-clip-name" id="editorClipName">New Clip</span>
+        <button class="icon-btn small" id="editorRenameBtn" title="Rename clip">
+          <svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </button>
+        <button class="icon-btn small" id="editorDeleteBtn" title="Delete clip">
+          <svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M6 7h12l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 7zm3-4h6l1 2h4v2H4V5h4l1-2z"/></svg>
+        </button>
+        <span class="divider"></span>
+        <button class="icon-btn small" id="editorExportBtn" title="Export clip">
+          <svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M5 20h14v-2H5v2zM11 4v9.17l-3.59-3.58L6 11l6 6 6-6-1.41-1.41L13 13.17V4h-2z"/></svg>
+        </button>
+        <button class="icon-btn small" id="editorSaveBtn" title="Save as clip">
+          <svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M5 3h3v6h8V3h1l4 4v14H5V3zm3 12v6h8v-6H8z"/></svg>
+        </button>
+        <button class="icon-btn small" id="editorCloseBtn" title="Close editor (Esc)">
+          <svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.3 19.71 2.88 18.3 9.17 12 2.88 5.71 4.3 4.29l6.29 6.3 6.29-6.3z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="editor-ruler" id="editorRuler"></div>
+    <canvas class="editor-waveform" id="editorCanvas"></canvas>
+    <div class="editor-minimap" id="editorMinimap">
+      <button class="minimap-nav left" id="minimapLeft">&lsaquo;</button>
+      <canvas id="minimapCanvas"></canvas>
+      <button class="minimap-nav right" id="minimapRight">&rsaquo;</button>
+    </div>
+  </section>
+
+  <footer class="keybinds" id="keybindsFooter">
+    <div class="keybinds-row" id="keybindsBrowse">
+      <span><kbd>Space</kbd> Play/Stop</span>
+      <span><kbd>P</kbd> Autoplay</span>
+      <span><kbd>&uarr;&darr;</kbd> Navigate</span>
+      <span><kbd>A</kbd>/<kbd>D</kbd> Up/Down Folders</span>
+      <span><kbd>E</kbd> Add/Remove from Set</span>
+      <span><kbd>Tab</kbd> Switch Pane</span>
+      <span><kbd>V</kbd> View Mode</span>
+      <span><kbd>Q</kbd> Switch Set</span>
+      <span><kbd>X</kbd> Export</span>
+      <span><kbd>?</kbd> Help</span>
+    </div>
+    <div class="keybinds-row" id="keybindsEditor" style="display:none">
+      <span><kbd>Space</kbd> Play/Stop</span>
+      <span><kbd>&larr;</kbd>/<kbd>&rarr;</kbd> Seek 1s</span>
+      <span><kbd>Shift</kbd>+<kbd>&larr;</kbd>/<kbd>&rarr;</kbd> Nudge</span>
+      <span><kbd>Bksp</kbd> Clear Clip</span>
+      <span><kbd>Esc</kbd> Close Editor</span>
+    </div>
+    <span class="spacer"></span>
+    <span class="logs-link" id="logsLink">
+      <svg viewBox="0 0 24 24" width="12" height="12"><path fill="currentColor" d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v2H3V6zm0 4h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/></svg>
+      Logs
+    </span>
+  </footer>
+
+  <div class="modal-backdrop" id="helpModalBackdrop">
+    <div class="modal">
+      <h3>Keyboard Shortcuts</h3>
+      <div class="help-grid" id="helpGrid"></div>
+      <button class="pill" id="closeHelpBtn">Close (Esc)</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="exportModalBackdrop">
+    <div class="modal">
+      <h3>Export Set</h3>
+      <div class="export-options" id="exportOptions">
+        <label>Preset
+          <select id="exportPresetSelect" style="margin-left:8px;background:#1c1c24;color:var(--text);border:1px solid var(--border);border-radius:6px;font-family:var(--mono);padding:3px 6px;">
+            <option value="">Custom</option>
+          </select>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="pill" id="cancelExportBtn">Cancel</button>
+        <button class="pill pill-active" id="runExportBtn">Export</button>
+      </div>
+      <div id="exportResult" class="export-result"></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="settingsModalBackdrop">
+    <div class="modal wide">
+      <h3>Settings</h3>
+
+      <div class="settings-section">
+        <h4>Playback</h4>
+        <div class="volume-row">
+          <span style="font-size:12px;color:var(--text-dim)">Master Volume</span>
+          <input type="range" id="volumeSlider" min="0" max="100" value="100">
+          <span class="volume-value" id="volumeValue">100%</span>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h4>Export Presets</h4>
+        <div class="preset-list" id="presetList"></div>
+        <button class="pill" id="newPresetBtn">+ New Preset</button>
+        <div id="presetFormContainer"></div>
+      </div>
+
+      <div class="settings-section">
+        <h4>Data</h4>
+        <div style="font-size:11.5px;color:var(--text-faint)">Database: <span id="dbPathLabel">—</span></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="pill pill-active" id="closeSettingsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<audio id="audioEl" preload="auto"></audio>
+<script src="/static/app.js"></script>
+</body>
+</html>

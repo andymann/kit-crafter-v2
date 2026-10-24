@@ -1,4 +1,8 @@
-pygame-ce>=2.5
-soundfile>=0.12
-numpy>=1.24
-pydub>=0.25
+numpy
+scipy
+soundfile
+librosa
+onnxruntime
+mutagen
+flask
+pywebview
